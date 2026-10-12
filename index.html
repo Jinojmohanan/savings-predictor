@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Nadu Survey | Modern Data Collection</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Tamil Nadu Insights</h1>
+            <p>Please provide your information below.</p>
+        </header>
+
+        <form id="surveyForm" novalidate>
+            <!-- District -->
+            <div class="form-group">
+                <label for="district">District</label>
+                <select id="district" name="district" required>
+                    <option value="" disabled selected>Select your district</option>
+                </select>
+            </div>
+
+            <!-- Salary -->
+            <div class="form-group">
+                <label for="salary">Monthly Salary (INR)</label>
+                <input type="text" id="salary" name="salary" placeholder="e.g. 50000" required>
+                <span class="error-msg" id="salaryError">Invalid: Please enter an integer value</span>
+            </div>
+
+            <!-- Cook or Buy -->
+            <div class="form-group">
+                <label>Do you cook or buy from outside?</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="cookingHabit" value="cook">
+                        <span class="custom-radio"></span> Cook
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="cookingHabit" value="outside">
+                        <span class="custom-radio"></span> Outside
+                    </label>
+                </div>
+            </div>
+
+            <!-- Dietary Preference -->
+            <div class="form-group">
+                <label>Dietary Preference</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="diet" value="vegetarian">
+                        <span class="custom-radio"></span> Vegetarian
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="diet" value="non-vegetarian">
+                        <span class="custom-radio"></span> Non-Vegetarian
+                    </label>
+                </div>
+            </div>
+
+            <!-- Conditional: Times eat outside -->
+            <div id="eatOutsideSection" class="form-group conditional hidden">
+                <label for="eatOutsideTimes">How many times do you like to eat from outside?</label>
+                <select id="eatOutsideTimes" name="eatOutsideTimes">
+                    <option value="0" selected>0</option>
+                    <!-- Options 1-31 will be added via JS -->
+                </select>
+            </div>
+
+            <!-- Teetotaller -->
+            <div class="form-group">
+                <label>Are you a teetotaller?</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="teetotaller" value="yes">
+                        <span class="custom-radio"></span> Yes
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="teetotaller" value="no">
+                        <span class="custom-radio"></span> No
+                    </label>
+                </div>
+            </div>
+
+            <!-- Conditional: Do you smoke? -->
+            <div id="smokeSection" class="form-group conditional hidden">
+                <label>Do you smoke?</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="smoke" value="yes">
+                        <span class="custom-radio"></span> Yes
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="smoke" value="no">
+                        <span class="custom-radio"></span> No
+                    </label>
+                </div>
+            </div>
+
+            <!-- House Rent -->
+            <div class="form-group">
+                <label for="houseRent">Monthly House Rent (INR)</label>
+                <input type="text" id="houseRent" name="houseRent" placeholder="e.g. 15000" required>
+                <span class="error-msg" id="rentError">Invalid: Please enter an integer value</span>
+            </div>
+
+            <!-- Movies -->
+            <div class="form-group">
+                <label for="moviesPerMonth">How many times do you like to watch a movie in a month?</label>
+                <select id="moviesPerMonth" name="moviesPerMonth" required>
+                    <option value="0" selected>0</option>
+                    <!-- Options 1-31 will be added via JS -->
+                </select>
+            </div>
+
+            <!-- Transport -->
+            <div class="form-group">
+                <label>Preferred Transport</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="transport" value="bus">
+                        <span class="custom-radio"></span> Bus/Public
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="transport" value="car">
+                        <span class="custom-radio"></span> Car
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="transport" value="bike">
+                        <span class="custom-radio"></span> Bike
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Calculate Savings</button>
+        </form>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="results-container hidden">
+            <h2>Your Monthly Savings Prediction</h2>
+            <div class="savings-amount">
+                <span class="currency">₹</span>
+                <span id="predictedSavings">0</span>
+            </div>
+            <p class="conclusion" id="overallConclusion"></p>
+            
+            <div class="expense-breakdown">
+                <h3>Expense Breakdown</h3>
+                <ul>
+                    <li><span>House Rent:</span> <span id="breakdownRent">₹0</span></li>
+                    <li><span>Food (Outside):</span> <span id="breakdownFood">₹0</span></li>
+                    <li><span>Movies:</span> <span id="breakdownMovies">₹0</span></li>
+                    <li><span>Transport (Fuel):</span> <span id="breakdownTransport">₹0</span></li>
+                    <li id="smokingRow" style="display:none"><span>Cigarettes &amp; Beer:</span> <span id="breakdownSmoking">₹0</span></li>
+                    <li class="breakdown-total"><span>Total Expenses:</span> <span id="breakdownTotal">₹0</span></li>
+                </ul>
+            </div>
+            
+            <button id="restartBtn">Recalculate</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
